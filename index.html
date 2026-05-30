@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teja King Chess</title>
+
+  <!-- Google Fonts -->
+   <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom Tailwind config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            cinzel: ['Cinzel', 'serif'],
+            crimson: ['"Crimson Pro"', 'serif'],
+          },
+          colors: {
+            gold: '#D4A017',
+            gold2: '#F0C040',
+            darkbg: '#1a1008',
+            midbg: '#2d1f0a',
+            lighttext: '#f5e6c8',
+            wsq: '#E8C97A',
+            bsq: '#8B4513',
+            boardborder: '#3a1f00',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-darkbg font-crimson text-lighttext min-h-screen flex items-start justify-center p-4">
+
+  <div class="app flex flex-col items-center gap-2 w-full max-w-lg">
+
+    <!-- Title -->
+    <h1 class="font-cinzel text-2xl font-black text-gold tracking-widest text-center mt-2">
+      ♛ TEJA KING ♚
+    </h1>
+
+    <!-- Mode Selector -->
+    <div class="mode-bar flex w-full border border-gold rounded-xl overflow-hidden">
+      <button id="btn2p" class="mode-btn mode-btn--active flex-1 font-cinzel text-xs tracking-widest py-2.5 px-2 transition-all border-r border-gold/30" onclick="setMode('2p')">
+        👥 2 Players
+      </button>
+      <button id="btnBot" class="mode-btn flex-1 font-cinzel text-xs tracking-widest py-2.5 px-2 transition-all" onclick="setMode('bot')">
+        🤖 vs Bot
+      </button>
+    </div>
+
+    <!-- Bot Options (hidden by default) -->
+    <div id="botOpts" class="hidden flex-col gap-2 w-full">
+      <div class="flex items-center justify-between gap-3">
+        <span class="font-cinzel text-xs text-gold tracking-widest">DIFFICULTY</span>
+        <div class="diff-bar flex border border-gold/50 rounded-lg overflow-hidden">
+          <button id="dEasy"   class="diff-btn diff-btn--active font-cinzel text-xs px-4 py-1.5 transition-all border-r border-gold/20" onclick="setDiff('easy')">Easy</button>
+          <button id="dMedium" class="diff-btn font-cinzel text-xs px-4 py-1.5 transition-all border-r border-gold/20" onclick="setDiff('medium')">Medium</button>
+          <button id="dHard"   class="diff-btn font-cinzel text-xs px-4 py-1.5 transition-all" onclick="setDiff('hard')">Hard</button>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 font-cinzel text-xs text-gold/80">
+        <span>Play as:</span>
+        <button id="cW" class="color-btn color-btn--active font-cinzel text-xs px-4 py-1.5 border border-gold/50 rounded-md transition-all" onclick="setPlayerColor('w')">⚪ White</button>
+        <button id="cB" class="color-btn font-cinzel text-xs px-4 py-1.5 border border-gold/50 rounded-md transition-all" onclick="setPlayerColor('b')">⚫ Black</button>
+      </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar w-full bg-midbg border border-gold rounded-xl px-5 py-2 text-center font-cinzel">
+      <div id="turnDisp" class="status-turn status-turn--white text-base font-bold tracking-wide">⚪ WHITE'S TURN</div>
+      <div id="statMsg" class="text-xs text-gold mt-0.5 min-h-[16px]">Move a piece to begin your conquest</div>
+    </div>
+
+    <!-- Thinking Bar -->
+    <div id="thinkingBar" class="thinking font-cinzel text-xs text-gold/70 text-center min-h-[16px]"></div>
+
+    <!-- Board -->
+    <div class="board-wrap">
+      <div class="flex items-center">
+        <div class="w-[18px]"></div>
+        <div id="fCoords" class="flex"></div>
+      </div>
+      <div class="flex">
+        <div id="rCoords" class="flex flex-col"></div>
+        <div id="boardDiv" class="board"></div>
+      </div>
+    </div>
+
+    <!-- Captured Pieces -->
+    <div class="flex gap-2 w-full">
+      <div class="panel flex-1 bg-midbg border border-gold/35 rounded-lg px-3 py-2">
+        <div class="font-cinzel text-[10px] text-gold/80 tracking-widest mb-1">⚪ WHITE CAPTURES</div>
+        <div id="wCap" class="caps flex flex-wrap gap-0.5 min-h-[22px] text-xl leading-none"></div>
+      </div>
+      <div class="panel flex-1 bg-midbg border border-gold/35 rounded-lg px-3 py-2">
+        <div class="font-cinzel text-[10px] text-gold/80 tracking-widest mb-1">⚫ BLACK CAPTURES</div>
+        <div id="bCap" class="caps flex flex-wrap gap-0.5 min-h-[22px] text-xl leading-none"></div>
+      </div>
+    </div>
+
+    <!-- Move History -->
+    <div class="w-full bg-midbg border border-gold/35 rounded-lg px-3 py-2">
+      <div class="font-cinzel text-[10px] text-gold/80 tracking-widest mb-1">MOVE HISTORY</div>
+      <div id="mLog" class="mlog max-h-20 overflow-y-auto text-xs text-lighttext/85"></div>
+    </div>
+
+    <!-- Promotion Area -->
+    <div id="promoArea"></div>
+
+    <!-- Buttons -->
+    <div class="flex gap-2 w-full">
+      <button class="ctrl-btn flex-1 bg-transparent border border-gold text-gold font-cinzel text-[11px] tracking-widest py-2 rounded-md transition-all hover:bg-gold hover:text-darkbg" onclick="newGame()">⚔ New Game</button>
+      <button class="ctrl-btn flex-1 bg-transparent border border-gold text-gold font-cinzel text-[11px] tracking-widest py-2 rounded-md transition-all hover:bg-gold hover:text-darkbg" onclick="undoMove()">↩ Undo</button>
+      <button class="ctrl-btn flex-1 bg-transparent border border-gold text-gold font-cinzel text-[11px] tracking-widest py-2 rounded-md transition-all hover:bg-gold hover:text-darkbg" onclick="toggleFlip()">⇅ Flip Board</button>
+    </div>
+
+  </div><!-- /.app -->
+
+  <!-- Game Logic -->
+  <script src="script.js"></script>
+</body>
+</html>

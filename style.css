@@ -1,0 +1,249 @@
+/* ============================================================
+   TEJA KING CHESS — style.css
+   Works alongside Tailwind CSS (loaded via CDN in index.html)
+   ============================================================ */
+
+/* ---------- CSS Custom Properties ---------- */
+:root {
+  --gold:         #D4A017;
+  --gold2:        #F0C040;
+  --dark:         #1a1008;
+  --mid:          #2d1f0a;
+  --light:        #f5e6c8;
+  --white-sq:     #E8C97A;
+  --black-sq:     #8B4513;
+  --board-border: #3a1f00;
+  --highlight:    rgba(255, 255,   0, 0.45);
+  --move-dot:     rgba( 60, 180,  60, 0.70);
+  --capture-ring: rgba(220,  30,  30, 0.75);
+  --check-sq:     rgba(255,   0,   0, 0.70);
+  --last-move:    rgba(100, 200, 255, 0.35);
+}
+
+/* ---------- Global Reset ---------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--dark);
+}
+
+/* ---------- Mode / Diff Buttons ---------- */
+.mode-btn {
+  background: transparent;
+  color: var(--gold);
+  cursor: pointer;
+}
+.mode-btn--active,
+.mode-btn.active {
+  background: var(--gold);
+  color: var(--dark);
+  font-weight: 700;
+}
+
+.diff-btn {
+  background: transparent;
+  color: rgba(212, 160, 23, 0.70);
+  cursor: pointer;
+}
+.diff-btn--active,
+.diff-btn.active {
+  background: rgba(212, 160, 23, 0.25);
+  color: var(--gold);
+}
+
+.color-btn {
+  background: transparent;
+  color: var(--gold);
+  cursor: pointer;
+}
+.color-btn--active,
+.color-btn.active {
+  background: rgba(212, 160, 23, 0.25);
+  border-color: var(--gold);
+}
+
+/* ---------- Status Turn Colors ---------- */
+.status-turn--white { color: #ffffff; }
+.status-turn--black { color: #bbbbbb; }
+.status-turn--gold  { color: var(--gold); }
+
+/* ---------- Board Coordinates ---------- */
+.cf {
+  width: 56px;
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  color: var(--gold);
+  opacity: 0.70;
+}
+
+.cr {
+  width: 18px;
+  text-align: center;
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  color: var(--gold);
+  opacity: 0.70;
+  line-height: 56px;
+}
+
+/* ---------- Chess Board ---------- */
+.board {
+  display: grid;
+  grid-template-columns: repeat(8, 56px);
+  grid-template-rows:    repeat(8, 56px);
+  border: 3px solid var(--board-border);
+  box-shadow: 0 0 30px rgba(212, 160, 23, 0.25);
+}
+
+/* ---------- Individual Squares ---------- */
+.sq {
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.10s;
+}
+
+.sq.light    { background: var(--white-sq); }
+.sq.dark     { background: var(--black-sq); }
+.sq.selected { background: var(--highlight)  !important; }
+.sq.lf,
+.sq.lt       { background: var(--last-move)  !important; }
+.sq.incheck  { background: var(--check-sq)   !important; }
+
+/* ---------- Move Indicators ---------- */
+.mdot {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--move-dot);
+  pointer-events: none;
+}
+
+.cring {
+  position: absolute;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 4px solid var(--capture-ring);
+  pointer-events: none;
+}
+
+/* ---------- Pieces ---------- */
+.piece {
+  font-size: 36px;
+  line-height: 1;
+  user-select: none;
+  cursor: pointer;
+  transition: transform 0.10s;
+  filter: drop-shadow(1px 2px 3px rgba(0, 0, 0, 0.70));
+}
+
+.piece:hover {
+  transform: scale(1.12);
+}
+
+.piece.wp {
+  filter:
+    drop-shadow(0 0 4px rgba(255, 255, 255, 0.80))
+    drop-shadow(1px 2px 3px rgba(0, 0, 0, 0.80));
+}
+
+.piece.bp {
+  filter:
+    drop-shadow(0 0 3px rgba(60, 30, 0, 0.90))
+    drop-shadow(1px 2px 3px rgba(0, 0, 0, 0.90));
+}
+
+/* King crown badge */
+.kp {
+  position: relative;
+}
+
+.kb {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  font-size: 12px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* ---------- Move History Scrollbar ---------- */
+.mlog::-webkit-scrollbar        { width: 4px; }
+.mlog::-webkit-scrollbar-track  { background: transparent; }
+.mlog::-webkit-scrollbar-thumb  { background: var(--gold); border-radius: 2px; }
+
+.mrow {
+  display: flex;
+  gap: 6px;
+  padding: 1px 0;
+}
+
+.mnum {
+  color: var(--gold);
+  opacity: 0.60;
+  min-width: 18px;
+}
+
+/* ---------- Pawn Promotion Modal ---------- */
+.promo-wrap {
+  min-height: 130px;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  margin: 4px 0;
+  width: 100%;
+}
+
+.promo-inner {
+  background: var(--mid);
+  border: 2px solid var(--gold);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+
+.promo-inner h3 {
+  font-family: 'Cinzel', serif;
+  color: var(--gold);
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.pchoices {
+  display: flex;
+  gap: 8px;
+}
+
+.pbtn {
+  background: var(--dark);
+  border: 1.5px solid var(--gold);
+  color: var(--light);
+  font-size: 32px;
+  width: 54px;
+  height: 54px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.pbtn:hover {
+  background: var(--gold);
+}
+
+/* ---------- Control Buttons (active press) ---------- */
+.ctrl-btn:active {
+  transform: scale(0.97);
+}
