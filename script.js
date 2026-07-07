@@ -1,10 +1,4 @@
-/* ============================================================
-   TEJA KING CHESS — chess.js
-   Full chess engine: legal moves, check/checkmate/stalemate,
-   castling, en passant, pawn promotion, minimax bot w/ alpha-beta
-   ============================================================ */
 
-"use strict";
 
 /* ──────────────────────────────────────────
    CONSTANTS
